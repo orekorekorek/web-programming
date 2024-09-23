@@ -1,5 +1,13 @@
 <template>
   <FlexHeader :size="headerSize" id="manual_changed">Заголовок</FlexHeader>
+  <div class="buttons">
+    <button v-if="buttonsVisible[0]" @click="changeHeaderSize(6, 0)">Header 6</button>
+    <button v-if="buttonsVisible[1]" @click="changeHeaderSize(5, 1)">Header 5</button>
+    <button v-if="buttonsVisible[2]" @click="changeHeaderSize(4, 2)">Header 4</button>
+    <button v-if="buttonsVisible[3]" @click="changeHeaderSize(3, 3)">Header 3</button>
+    <button v-if="buttonsVisible[4]" @click="changeHeaderSize(2, 4)">Header 2</button>
+    <button @click="resetButtons">Reset</button>
+  </div>
   <div class="outer">
     <div class="middle">
       <div class="inner">
@@ -20,14 +28,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="buttons">
-    <button v-if="buttonsVisible[0]" @click="changeHeaderSize(1, 0)">Size 1</button>
-    <button v-if="buttonsVisible[1]" @click="changeHeaderSize(2, 1)">Size 2</button>
-    <button v-if="buttonsVisible[2]" @click="changeHeaderSize(3, 2)">Size 3</button>
-    <button v-if="buttonsVisible[3]" @click="changeHeaderSize(4, 3)">Size 4</button>
-    <button v-if="buttonsVisible[4]" @click="changeHeaderSize(5, 4)">Size 5</button>
-    <button @click="resetButtons">Reset</button>
   </div>
 </template>
 
