@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Visit Card</title>
+  <style>
+    body {
+      font-family: Avenir, Helvetica, Arial, sans-serif;
+      text-align: center;
+      font-size: large;
+      color: #2c3e50;
+    }
+    .outer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+      padding: 3%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .middle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #d0d0d0;
+      padding: 3%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .inner {
+      display: grid;
+      padding-top: 8%;
+      justify-content: space-between;
+      background-color: #b0b0b0;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto 3fr 2fr;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .third-width {
+      grid-column: span 1;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .description {
+      grid-column: span 3;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .copyrights {
+      grid-column: span 3;
+      grid-row: span 1;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    img {
+        height: auto;
+        width: 100%;
+        display: block;
+        margin: 0 auto;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        background-color: #fff;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    h1 {
+        font-family: 'Times New Roman';
+        text-align: center;
+        justify-content: center;
+    }
+    h2 {
+        font-family: 'Arial';
+        text-align: center;
+        justify-content: center;
+    }
+    h3 {
+        font-family: 'Tahoma';
+        text-align: center;
+        justify-content: center;
+    }
+    h4 {
+        font-family: 'Comic Sans MS';
+        text-align: center;
+        justify-content: center;
+    }
+    h5 {
+        font-family: 'Book Antiqua';
+        text-align: center;
+        justify-content: center;
+    }
+    h6 {
+        font-family: 'Courier New';
+        text-align: center;
+        justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="header">Test</h1>
+  <div class="buttons">
+    <button onclick="changeHeaderSize(6, 0)">H6</button>
+    <button onclick="changeHeaderSize(5, 1)">H5</button>
+    <button onclick="changeHeaderSize(4, 2)">H4</button>
+    <button onclick="changeHeaderSize(3, 3)">H3</button>
+    <button onclick="changeHeaderSize(2, 4)">H2</button>
+  </div>
+  <button onclick="resetButtons()">Reset</button>
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="third-width">
+          <h6>Область заголовка 6</h6>
+          <img src="https://www.w3schools.com/w3images/avatar2.png">
+        </div>
+        <div class="third-width">
+          <h5>Область заголовка 5</h5>
+          <ul>
+            <li>Телефон: +7 999 999 99 99</li>
+            <li>Адрес: г. Москва, ул. Пушкина, д. Колотушкина</li>
+            <li>Электронная почта:</li>
+          </ul>
+        </div>
+        <div class="third-width">
+          <h4>Область заголовка 4</h4>
+          <ol>
+            <li>Имя: Иван</li>
+            <li>Фамилия: Иванов</li>
+            <li>Отчество: Иванович</li>
+            <li>Дата рождения: 01.01.2001</li>
+            <li>Место рождения: г. Москва</li>
+            <li>Пол: мужской</li>
+          </ol>
+        </div>
+        <div class="description">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt aliquam.</p>
+        </div> 
+        <div class="copyrights">
+          <p>© 2021</p>
+        </div>  
+      </div>
+    </div>
+  </div>
+  <script>
+    let currentDisabled = -1;
+
+    function changeHeaderSize(size, index) {
+      const header = document.getElementById('header')
+      let newHeader = document.createElement(`h${size}`)
+
+      newHeader.id = header.id
+      newHeader.innerHTML = header.innerHTML
+      header.replaceWith(newHeader)
+
+      buttons = document.querySelectorAll('.buttons button')
+
+      if (currentDisabled >= 0) {
+        buttons[currentDisabled].hidden = false
+      }
+
+      currentDisabled = index
+
+      buttons[index].hidden = true
+    }
+
+    function resetButtons() {
+      const header = document.getElementById('header')
+      let newHeader = document.createElement('h1')
+
+      newHeader.id = header.id
+      newHeader.innerHTML = header.innerHTML
+      header.replaceWith(newHeader)
+
+      if (currentDisabled >= 0) {
+        document.querySelectorAll('.buttons button')[currentDisabled].hidden = false
+      }
+
+      currentDisabled = -1
+    }
+  </script>
+</body>
+</html>
