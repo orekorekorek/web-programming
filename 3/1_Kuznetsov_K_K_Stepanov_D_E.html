@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  
+  <body>
+    <div id="app">
+      <ol :type="listType" :start="listStart">
+        <li>{{ items[0] }}</li>
+        <li>{{ items[1] }}</li>
+        <li>{{ items[2] }}</li>
+        <li>{{ items[3] }}</li>
+        <li>{{ items[4] }}</li>
+      </ol>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            listType: 'I',
+            listStart: 666,
+            items: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']
+          };
+        }
+      });
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>

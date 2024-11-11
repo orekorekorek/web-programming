@@ -1,0 +1,41 @@
+<html></html>
+  <head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  
+  <body>
+    <div id="app">
+      <input type="number" :value="value" :min="min" :max="max" step="0.1" readonly>
+      <button v-on:click="changeValue(0.1)">Step 0.1</button>
+      <button v-on:click="changeValue(0.5)">Step 0.5</button>
+      <button v-on:click="changeValue(1.0)">Step 1.0</button>
+      <button v-on:click="resetValue">Reset</button>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            value: -5,
+            min: -5,
+            max: 7
+          };
+        },
+        methods: {
+          changeValue(step) {
+            let newValue = parseFloat((this.value + step).toFixed(1));
+            if (newValue > this.max) {
+              newValue = this.min;
+            }
+            this.value = newValue;
+          },
+          resetValue() {
+            this.value = this.min;
+          }
+        }
+      });
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>
