@@ -1,11 +1,11 @@
-<html></html>
+<html>
   <head>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   
   <body>
     <div id="app">
-      <svg width="800px" height="600px" style="border:1px solid black;">
+      <svg width="800px" height="600px" style="border:1px solid black;" @keyup="moveCircle" tabindex="0">
         <circle :cx="x" :cy="y" r="10px" fill="blue"></circle>
       </svg>
     </div>
@@ -43,12 +43,6 @@
                 break;
             }
           }
-        },
-        mounted() {
-          window.addEventListener('keyup', this.moveCircle);
-        },
-        beforeUnmount() {
-          window.removeEventListener('keyup', this.moveCircle);
         }
       });
 
