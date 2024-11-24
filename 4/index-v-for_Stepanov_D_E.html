@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 SVG Axis</title>
+    <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    <style>
+        .axis-line {
+            stroke: black;
+            stroke-width: 2;
+        }
+
+        .tick-line {
+            stroke: black;
+            stroke-width: 1;
+        }
+
+        .zero-tick-line {
+            stroke: black;
+            stroke-width: 3;
+        }
+
+        .arrow {
+            stroke: black;
+            stroke-width: 2;
+            fill: black;
+        }
+
+        .tick-text {
+            font-size: 12px;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <svg width="1000" height="300">
+            <line x1="100" y1="150" x2="900" y2="150" class="axis-line"></line>
+            <polygon points="900,150 890,145 890,155" class="arrow"></polygon>
+            <line v-for="tick in ticks" :x1="tick.x" y1="140" :x2="tick.x" y2="160"
+                :class="tick.value === 0 ? 'zero-tick-line' : 'tick-line'"></line>
+            <text v-for="tick in ticks" :x="tick.x" y="175" class="tick-text">{{ Number(tick.value).toFixed(precision) }}</text>
+        </svg>
+        <div>
+            <label for="start">Start:</label>
+            <input type="number" v-model.number="start" :step="inputStep" id="start">
+            <label for="end">End:</label>
+            <input type="number" v-model.number="end" :step="inputStep" id="end">
+            <label for="step">Step:</label>
+            <input type="number" v-model.number="step" :step="inputStep" id="step">
+            <label for="precision">Precision:</label>
+            <input type="number" v-model.number="precision" id="precision">
+        </div>
+    </div>
+    <script>
+        const { createApp } = Vue;
+        const offset = 100;
+        const width = 800;
+
+        createApp({
+            data() {
+                return {
+                    start: -10,
+                    end: 10,
+                    step: 1,
+                    precision: 0
+                };
+            },
+            computed: {
+                inputStep() {
+                    if (this.precision <= 0) return;
+                    
+                    return Math.pow(10, -this.precision);
+                },
+                ticks() {
+                    if (this.start >= this.end) return;
+                    if (this.step <= 0) return;
+
+                    const ticks = [];
+                    let prev = this.start;
+
+                    for (let value = this.start; value <= this.end; value += this.step) {
+                        const x = offset + ((value - this.start) / (this.end - this.start)) * width;
+
+                        ticks.push({ x: x, value: value });
+
+                        if (prev < 0 && value >= 0) {
+                            zero = offset + ((0 - this.start) / (this.end - this.start)) * width;
+                            ticks.push({ x: zero, value: 0 });
+                        }
+
+                        prev = value;
+                    }
+
+                    return ticks;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

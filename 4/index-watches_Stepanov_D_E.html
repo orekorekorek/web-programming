@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 List Editing</title>
+    <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+        .input-container label {
+            margin-right: 10px;
+        }
+        .input-container input {
+            padding: 5px;
+            font-size: 14px;
+        }
+        ul, select {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        ul li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="input-container">
+            <label for="input">Input:</label>
+            <input type="text" v-model="inputValue" @keydown="handleKeydown" id="input">
+        </div>
+        <ul v-if="!isEditing">
+            <li v-for="(item, index) in items" :key="index">{{ item }}</li>
+        </ul>
+        <select v-else v-model="selectedIndex">
+            <option v-for="(item, index) in items" :key="index" :value="index">{{ item }}</option>
+        </select>
+    </div>
+    <script>
+        const { createApp, watch } = Vue;
+        const EDIT_VALUE = '#редактировать#'
+        const ENTER_VALUE = '#вводить#'
+
+        createApp({
+            data() {
+                return {
+                    inputValue: '',
+                    items: [],
+                    isEditing: false,
+                    selectedIndex: null
+                };
+            },
+            watch: {
+                inputValue(newValue) {
+                    if (newValue === EDIT_VALUE) {
+                        this.inputValue = '';
+                        this.isEditing = true
+                    } else if (newValue === ENTER_VALUE) {
+                        this.inputValue = '';
+                        this.isEditing = false
+                    }
+                },
+                selectedIndex(newIndex) {
+                    if (newIndex !== null) this.inputValue = this.items[newIndex];
+                }
+            },
+            methods: {
+                handleKeydown() {
+                    if (!((event.ctrlKey || event.metaKey) && event.key === 'Enter')) return;
+
+                    if (this.isEditing && this.selectedIndex !== null) {
+                        this.items[this.selectedIndex] = this.inputValue;
+                    } else if (!this.isEditing) {
+                        this.items.push(this.inputValue);
+                    }
+
+                    this.inputValue = '';
+                },
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

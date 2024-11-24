@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Lifecycle Hooks Demo</title>
+    <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 5px;
+            background-color: #f4f4f4;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .log-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #eaeaea;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Vue 3 Lifecycle Hooks Demo</h1>
+
+        <div class="log-container">
+            <pre>{{ logMessages }}</pre>
+        </div>
+
+        <button @click="toggleChild">Toggle Child Component</button>
+        <button @click="updateMessage">Update Child Message</button>
+
+        <child-component v-if="showChild" :message="childMessage" />
+    </div>
+    <script>
+        const { createApp, defineComponent, ref, onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted, provide, inject } = Vue;
+
+        const ChildComponent = defineComponent({
+            props: ['message'],
+            template: `
+                <div class="message">
+                    <h3>Child Component</h3>
+                    <p>Message: {{ message }}</p>
+                </div>
+            `,
+
+            setup(props) {
+                return { logHook: inject('logHook') };
+            },
+
+            beforeCreate() { this.logHook('Child', 'beforeCreate'); },
+            created() { this.logHook('Child', 'created'); },
+            beforeMount() { this.logHook('Child', 'beforeMount'); },
+            mounted() { this.logHook('Child', 'mounted'); },
+            beforeUpdate() { this.logHook('Child', 'beforeUpdate'); },
+            updated() { this.logHook('Child', 'updated'); },
+            beforeUnmount() { this.logHook('Child', 'beforeUnmount'); },
+            unmounted() { this.logHook('Child', 'unmounted'); },
+        });
+
+        const app = createApp({
+            components: { ChildComponent },
+            data() {
+                return {
+                    showChild: true,
+                    childMessage: 'Initial message',
+                    logMessages: ''
+                };
+            },
+            methods: {
+                toggleChild() {
+                    this.showChild = !this.showChild;
+                },
+                updateMessage() {
+                    this.childMessage = `Updated message at ${new Date().toLocaleTimeString()}`;
+                },
+                logHook(entity, hook) {
+                    const message = `${entity}: ${hook} performed at ${new Date().toISOString()}`;
+                    console.log(message);
+                    this.logMessages += message + '\n';
+                }
+            },
+            provide() { return { logHook: this.logHook }; }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
