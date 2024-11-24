@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  
+  <body>
+    <div id="app">
+      <div>
+        <label><input type="checkbox" v-model="selectedTemplate" value="1"> Шаблон 1 (Русский)</label>
+        <label><input type="checkbox" v-model="selectedTemplate" value="2"> Шаблон 2 (Английский)</label>
+        <label><input type="checkbox" v-model="selectedTemplate" value="3"> Шаблон 3 (ГОСТ)</label>
+        <label><input type="checkbox" v-model="selectedTemplate" value="4"> Шаблон 4 (Scopus)</label>
+        <label><input type="checkbox" v-model="selectedTemplate" value="5"> Шаблон 5 (Транслитерация)</label>
+      </div>
+
+      <template v-if="selectedTemplate.includes('1')">
+        <div>
+          <h3>Библиографическая ссылка на русском языке</h3>
+          1. Баранов, Л. А. Интеллектуальное централизованное управление движением внеуличного городского железнодорожного транспорта в условиях интенсивного движения | Надежность - 2021 | Том 21 | Выпуск № 2. | Страницы 17-23
+        </div>
+      </template>
+
+      <template v-if="selectedTemplate.includes('2')">
+        <div>
+          <h3>Библиографическая ссылка на английском языке</h3>
+          1. Baranov L A Intelligent centralized control of off-street urban rail transport in heavy traffic conditions | Reliability - 2021 | Volume 21 | Release № 2. | Pages 17-23
+        </div>
+      </template>
+
+      <template v-if="selectedTemplate.includes('3')">
+        <div>
+          <h3>Библиографическая ссылка в формате ГОСТ</h3>
+          1. Баранов, Л. А. Интеллектуальное централизованное управление движением внеуличного городского железнодорожного транспорта в условиях интенсивного движения / Л. А. Баранов // Надежность. – 2021. – Т. 21, № 2. – С. 17-23
+        </div>
+      </template>
+
+      <template v-if="selectedTemplate.includes('4')">
+        <div>
+          <h3>Библиографическая ссылка в формате Scopus</h3>
+          [1] Baranov L A 2021 Intelligent centralized control of off-street urban rail transport in heavy traffic conditions (Reliability vol 21) pp 17–23
+        </div>
+      </template>
+
+      <template v-if="selectedTemplate.includes('5')">
+        <div>
+          <h3>Транслитерация русскоязычной информации в формат Scopus</h3>
+          [1] Baranov L A 2021 Intellektualnoe centralizovannoe upravlenie dvizheniem vneulichnogo gorodskogo zheleznodorozhnogo transporta v usloviyah intensivnogo dvizheniya (Nadezhnost vol 21) pp 17–23
+        </div>
+      </template>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            selectedTemplate: []
+          };
+        }
+      });
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>

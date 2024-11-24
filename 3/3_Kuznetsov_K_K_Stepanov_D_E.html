@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  
+  <body>
+    <div id="app">
+      <svg width="800px" height="600px" style="border:1px solid black;" @keyup="moveCircle" tabindex="0">
+        <circle :cx="x" :cy="y" r="10px" fill="blue"></circle>
+      </svg>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            x: this.getRandomPosition(20, 780),
+            y: this.getRandomPosition(20, 580)
+          };
+        },
+        methods: {
+          getRandomPosition(min, max) {
+            return Math.ceil(Math.random() * (max - min + 1) / 10) * 10 + min;
+          },
+          moveCircle(event) {
+            const step = 10;
+            switch (event.key) {
+              case 'a':
+              case 'ArrowLeft':
+                if (this.x - step >= 20) this.x -= step;
+                break;
+              case 'w':
+              case 'ArrowUp':
+                if (this.y - step >= 20) this.y -= step;
+                break;
+              case 's':
+              case 'ArrowDown':
+                if (this.y + step <= 580) this.y += step;
+                break;
+              case 'd':
+              case 'ArrowRight':
+                if (this.x + step <= 780) this.x += step;
+                break;
+            }
+          }
+        }
+      });
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>
