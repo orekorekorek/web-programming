@@ -34,6 +34,12 @@ class ProductsController < ApplicationController
     head :no_content
   end
 
+  def edit
+    product = Product.find(params[:id])
+
+    render json: product
+  end
+
   private
 
   def product_params

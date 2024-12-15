@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Product Management</h1>
+        <h1>Product List</h1>
 
         <div v-if="loading" class="loading-spinner">
             <span class="loader"></span>
@@ -8,32 +8,14 @@
 
         <div v-else>
             <div>
-                <h2>{{ isEditing ? 'Edit Product' : 'Add Product' }}</h2>
-                <form @submit.prevent="isEditing ? updateProduct() : createProduct()">
-                    <div>
-                        <label for="name">Name:</label>
-                        <input type="text" v-model="productForm.name" required>
-                        <span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
-                    </div>
-                    <div>
-                        <label for="price">Price:</label>
-                        <input type="number" v-model="productForm.price" required>
-                        <span v-if="errors.price" class="error-message">{{ errors.price[0] }}</span>
-                    </div>
-                    <button type="submit">{{ isEditing ? 'Update' : 'Add' }}</button>
-                    <button type="button" @click="resetForm">Cancel</button>
-                </form>
-            </div>
-    
-            <div>
-                <h2>Product List</h2>
                 <ul>
                     <li v-for="product in products" :key="product.id">
                         {{ product.name }} - ${{ product.price }}
-                        <button @click="editProduct(product)">Edit</button>
+                        <router-link :to="`/products/${product.id}/edit`">Edit</router-link>
                         <button @click="deleteProduct(product.id)">Delete</button>
                     </li>
                 </ul>
+                <router-link :to="`/products/new`">Add Product</router-link>
             </div>
         </div>
     </div>
@@ -135,18 +117,6 @@ export default {
                 this.loading = false;
             }
         },
-        editProduct(product) {
-            this.productForm = { ...product };
-            this.isEditing = true;
-        },
-        resetForm() {
-            this.productForm = {
-                name: '',
-                price: ''
-            };
-            this.isEditing = false;
-            this.errors = {};
-        }
     }
 };
 </script>
