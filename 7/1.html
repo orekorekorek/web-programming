@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Треугольник Серпинского</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        svg {
+            border: 1px solid #000000;
+        }
+        input {
+            width: 60px;
+        }
+        .log-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #eaeaea;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            height: 300px;
+            border-left: 1px solid #000;
+            border-bottom: 1px solid #000;
+            margin-top: 20px;
+        }
+        .bar {
+            width: 50px;
+            margin-right: 10px;
+            background-color: #007bff;
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+        .bar-label {
+            margin-top: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="trngl">
+        <br>
+        <svg :width="w" :height="h">
+            <rect v-for="pixel in pixels" 
+                  :key="pixel.x + '-' + pixel.y"
+                  fill="#000000"
+                  fill-opacity="1"
+                  :x="pixel.x" 
+                  :y="pixel.y" 
+                  width="1" 
+                  height="1"/>
+        </svg>
+
+        <label>
+          <input type="checkbox" v-model="useNewOrigin"> Use New Origin
+        </label>
+
+        <div class="log-container">
+          <h3>Координаты точек:</h3>
+          <pre>{{ formattedCoordinates }}</pre>
+        </div>
+
+        <div class="chart-container">
+          <div v-for="(value, index) in calculationTimes" :key="index" class="bar" :style="{ height: value + 'px' }">
+              {{ value.toFixed(2) }}
+          </div>
+        </div>
+        <div class="bar-labels">
+            <div v-for="(label, index) in labels" :key="index" class="bar-label">
+                {{ label }}
+            </div>
+        </div>
+
+        <button @click="updateData">Update Data</button>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    w: 500,
+                    h: 500,
+                    // Вершины треугольника
+                    A: [0, 0],
+                    B: [0.5, 0.86603], // Math.sqrt(3)/2 = 0.86603
+                    C: [1, 0],
+                    pixels: [],
+                    useNewOrigin: true, // Флаг для переключения между ветвями
+                    calculationTimes: [], // Время расчёта
+                    labels: ['Calculation Time'] // Метки для диаграммы
+                };
+            },
+            computed: {
+                ABC() {
+                    return [this.A, this.B, this.C];
+                },
+                formattedCoordinates() {
+                    return this.pixels.map(pixel => `(${pixel.x.toFixed(2)}, ${pixel.y.toFixed(2)})`).join('\n');
+                }
+            },
+            methods: {
+                drawFractal() {
+                    // Коллекция точек
+                    this.pixels = [];
+                    let p = [];
+                    let startTime = performance.now();
+                    if (this.useNewOrigin) {
+                        // Новая ветвь вычислений с начальной точкой в правом нижнем углу
+                        let px = {};
+                        let dx = Math.random();
+                        let dy = Math.random();
+                        px.x = this.w - dx * this.w;
+                        px.y = this.h - dy * this.h;
+                        this.pixels.push(px);
+                        p.push([dx, dy]);
+                        for (let i = 0; i < 100000; i++) {
+                            let U = this.ABC[Math.floor(Math.random() * this.ABC.length)];
+                            let G = p[p.length - 1];
+                            let dxx = (U[0] + G[0]) / 2;
+                            let dyy = (U[1] + G[1]) / 2;
+                            let px = {};
+                            px.x = this.w - dxx * this.w;
+                            px.y = this.h - dyy * this.h;
+                            this.pixels.push(px);
+                            p.push([dxx, dyy]);
+                        }
+                    } else {
+                        // Исходная ветвь вычислений
+                        let px = {};
+                        let dx = Math.random();
+                        let dy = Math.random();
+                        px.x = dx * this.w;
+                        px.y = dy * this.h;
+                        this.pixels.push(px);
+                        p.push([dx, dy]);
+                        for (let i = 0; i < 100000; i++) {
+                            let U = this.ABC[Math.floor(Math.random() * this.ABC.length)];
+                            let G = p[p.length - 1];
+                            let dxx = (U[0] + G[0]) / 2;
+                            let dyy = (U[1] + G[1]) / 2;
+                            let px = {};
+                            px.x = dxx * this.w;
+                            px.y = dyy * this.h;
+                            this.pixels.push(px);
+                            p.push([dxx, dyy]);
+                        }
+                    }
+                    let endTime = performance.now();
+                    this.calculationTimes.push(endTime - startTime);
+                },
+                updateData() {
+                    this.drawFractal();
+                }
+            },
+            created() {
+                let now = new Date();
+                console.log("Начато построение: " + now + " мс: " + now.getMilliseconds());
+                this.drawFractal();
+            },
+            mounted() {
+                let now = new Date();
+                console.log("Отображено на странице: " + now + " мс: " + now.getMilliseconds());
+            }
+        });
+
+        app.mount('#trngl');
+    </script>
+</body>
+</html>
